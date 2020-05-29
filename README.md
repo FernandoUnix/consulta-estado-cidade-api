@@ -11,11 +11,11 @@
 
 # Models
 
-<img src="/docs/models_diagrama.png" raw=true style="margin-right: 10px;"/>
+<img src="docs/models_diagrama.PNG" raw=true style="margin-right: 10px;"/>
 
 # Serviços
 
-<img src="/docs/servicos_diagrama.png" raw=true style="margin-right: 10px;"/>
+<img src="docs/servicos_diagrama.PNG" raw=true style="margin-right: 10px;"/>
 
 # Instruções
 
