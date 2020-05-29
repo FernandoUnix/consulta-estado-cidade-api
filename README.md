@@ -13,7 +13,7 @@
 
 <img src="docs/models_diagrama.PNG" raw=true style="margin-right: 10px;"/>
 
-# Serviços
+# Services
 
 <img src="docs/servicos_diagrama.PNG" raw=true style="margin-right: 10px;"/>
 
