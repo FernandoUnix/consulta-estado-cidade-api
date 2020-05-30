@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,37 +29,32 @@ public class ConsultaCidadesService {
 
 	public List<Cidade> getCidades() {
 
-		Log.getLog().info("Inicio consultar cidades");
+		Log.getLog().info("Consultando cidades...");
 
 		List<UF> estados = this.consultaEstadosService.getEstados();
-		List<Cidade> listaCidades = new ArrayList<Cidade>();
+		List<Cidade> cidades = getCidadesPorEstados(estados);
 
-		estados.forEach(estado -> {
-			listaCidades.addAll(montarCidadesPorEstado(estado));
-		});
+		Log.getLog().info("Consulta de cidades finalizado...");
 
-		Log.getLog().info("Fim consultar cidades");
-
-		return listaCidades;
+		return cidades;
 	}
 
-	private List<Cidade> montarCidadesPorEstado(UF estado) {
+	private List<Cidade> getCidadesPorEstados(List<UF> estados) {
 
 		List<Cidade> listaCidades = new ArrayList<Cidade>();
 
-		Log.getLog().info("Inicio consulta de cidades para o estado : " + estado);
+		Log.getLog().info("Consulta de cidades para os estados: " + estados);
+
+		String estadosIds = String.join("|", estados.stream().map(estado -> estado.getId().toString()).collect(Collectors.toList()));
 
 		Map<String, String> param = new HashMap<String, String>();
-		param.put("UF", estado.getSigla());
-
-		Log.getLog().info("Consultando cidades da UF:  " + estado.getSigla());
+		param.put("UF", estadosIds);
 
 		Cidade[] cidades = restTemplate.getForObject(url, Cidade[].class, param);
-
 		listaCidades.addAll(Arrays.asList(cidades));
 
-		Log.getLog().info("Fim consulta de cidades para o estado : " + estado);
-		Log.getLog().info("Cidades encontradas para o Estado " + estado.getSigla() + " | " + listaCidades);
+		Log.getLog().info("Fim consulta de cidades para os estados: " + estados);
+		Log.getLog().info("Cidades encontradas: " + listaCidades);
 
 		return listaCidades;
 	}

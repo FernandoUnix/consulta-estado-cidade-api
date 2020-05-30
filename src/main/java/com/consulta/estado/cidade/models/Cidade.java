@@ -22,4 +22,9 @@ public class Cidade extends ModelBase implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getNome();
+	}
 }

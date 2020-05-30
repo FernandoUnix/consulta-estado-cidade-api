@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.consulta.estado.cidade.models.Cidade;
-import com.consulta.estado.cidade.services.CidadesToMapService;
+import com.consulta.estado.cidade.models.CidadeDto;
 import com.consulta.estado.cidade.services.ConsultaCidadesService;
 import com.consulta.estado.cidade.services.IFileConvertService;
 import io.swagger.annotations.Api;
@@ -35,37 +36,34 @@ public class ConsultaCidadeResource {
 	@Autowired
 	private ConsultaCidadesService consultaCidadesService;
 
-	@Autowired
-	private CidadesToMapService cidadesToMapService;
-
 	@ApiOperation(value = "Retorna csv")
 	@GetMapping("/cidades/csv")
 	@ResponseStatus(HttpStatus.CREATED)
 	public OutputStream getCsv(HttpServletResponse response) throws IOException {
-		List<Map<String, String>> listaMapDados = cidadesToMapService.getMapResult();
 
+		List<CidadeDto> cidadesDto = consultaCidadesService.getCidades().stream().map(cidade -> new CidadeDto(cidade)).collect(Collectors.toList());
+		
 		response.setContentType("text/csv");
 
 		String nomeArquivo = "consulta_" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
 		response.setHeader("Content-Disposition", "attachment; filename=" + nomeArquivo + ".csv;");
 		
-		return fileConvertCsv.converter(response.getOutputStream(), listaMapDados);
+		return fileConvertCsv.convertert(response.getOutputStream(), cidadesDto);
 	}
 
 	@ApiOperation(value = "Retorna json")
 	@GetMapping("/cidades/json")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<Map<String, String>>> getCidades() {
-		List<Map<String, String>> listaMapDados = cidadesToMapService.getMapResult();
-		return new ResponseEntity<List<Map<String, String>>>(listaMapDados, HttpStatus.OK);
+	public List<CidadeDto> getCidades() {
+		List<CidadeDto> cidadesDto = consultaCidadesService.getCidades().stream().map(x -> new CidadeDto(x)).collect(Collectors.toList());
+		return cidadesDto;
 	}
 
 	@ApiOperation(value = "obtem cidade por nome")
 	@GetMapping("/cidades/{nomeCidade}")
 	@Cacheable("cidade")
 	public ResponseEntity<?> getCidade(@PathVariable String nomeCidade) {
-		Cidade cidade = consultaCidadesService.getCidades().stream()
-				.filter(cid -> cid.getNome().equalsIgnoreCase(nomeCidade)).findFirst().orElse(null);
+		Cidade cidade = consultaCidadesService.getCidades().stream().filter(cid -> cid.getNome().equalsIgnoreCase(nomeCidade)).findFirst().orElse(null);
 
 		if (cidade != null) {
 			return new ResponseEntity<>(cidade.getId(), HttpStatus.OK);

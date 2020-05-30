@@ -15,4 +15,9 @@ public class UF extends ModelBaseWithSigla implements Serializable {
 	public void setRegiao(Regiao regiao) {
 		this.regiao = regiao;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getSigla();
+	}
 }

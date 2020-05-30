@@ -19,13 +19,15 @@ public class ConsultaEstadosService {
 	private String url;
 
 	public List<UF> getEstados() {
-		
-		Log.getLog().info("Inicio obter Estados");
-		
+
+		Log.getLog().info("Inicio consulta Estados");
+
 		UF[] ufs = restTemplate.getForObject(url, UF[].class);
-		
-		Log.getLog().info("Fim obter Estados :" + ufs);
-		
-		return Arrays.asList(ufs);
+
+		List<UF> estados = Arrays.asList(ufs);
+
+		Log.getLog().info("Fim consulta Estados, estados encontados: " + estados);
+
+		return estados;
 	}
 }
