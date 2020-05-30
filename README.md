@@ -13,6 +13,10 @@
 
 <img src="docs/models_diagrama.PNG" raw=true style="margin-right: 10px;"/>
 
+# DTO
+
+<img src="docs/cidadeDto.PNG" raw=true style="margin-right: 10px;"/>
+
 # Services
 
 <img src="docs/servicos_diagrama.PNG" raw=true style="margin-right: 10px;"/>
